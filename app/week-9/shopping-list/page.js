@@ -1,27 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useUserAuth } from "./_utils/auth-context";
-import { useRouter } from 'next/router';
+import { useUserAuth } from "../_utils/auth-context";
 import ItemList from "./item-list";
 import NewItem from "./new-item";
 import MealIdeas from "./meal-ideas";
 import itemsData from "./items.json";
+import Link from 'next/link';
 
 const Page = () => {
   const { user } = useUserAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!user) {
-      router.push('/');
-    }
-  }, [user, router]);
-
-  if (!user) {
-    return null;
-  }
-
   const [items, setItems] = useState(itemsData);
   const [selectedItemName, setSelectedItemName] = useState('');
 
@@ -33,6 +21,15 @@ const Page = () => {
     const cleanedName = item.name.split(',')[0].trim().replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|[\u2011-\u26FF]|[\u2011-\u26FF]|[\u2011-\u26FF]|[\u2011-\u26FF])/g, '');
     setSelectedItemName(cleanedName);
   };
+
+  if (!user) {
+    return (
+      <div>
+        <p>You must be logged in to view this page.</p>
+        <Link href="/week-9">Click here to go back to the login page.</Link>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gray-900 text-white p-8 flex">
